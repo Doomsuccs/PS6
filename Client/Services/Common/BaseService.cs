@@ -52,9 +52,7 @@ namespace DOOR.Client.Services.Common
 
         public async Task<NotificationModel> Post(E _Item)
         {
-            string _ItemJson = JsonConvert.SerializeObject(_Item);
-
-            HttpResponseMessage response = await Http.PostAsJsonAsync($"{RestAPI}/Post{BaseObject}", _ItemJson);
+            HttpResponseMessage response = await Http.PostAsJsonAsync($"{RestAPI}/Post{BaseObject}", _Item);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
@@ -75,9 +73,7 @@ namespace DOOR.Client.Services.Common
 
         public async Task<NotificationModel> Put(E _Item)
         {
-            string _ItemJson = JsonConvert.SerializeObject(_Item);
-
-            HttpResponseMessage response = await Http.PutAsJsonAsync($"{RestAPI}/Put{BaseObject}", _ItemJson);
+            HttpResponseMessage response = await Http.PutAsJsonAsync($"{RestAPI}/Put{BaseObject}", _Item);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {

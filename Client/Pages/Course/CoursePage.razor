@@ -1,0 +1,11 @@
+﻿@page "/CoursePage"
+@attribute [Authorize]
+@inherits TelerikGridCrud
+@using DOOR.Client.Shared.Course
+
+<CourseGrid @ref="_CourseGrid" _CoursePage="this"></CourseGrid>
+
+<TelerikNotification @ref="@Notification"
+                     AnimationType="AnimationType.Fade"
+                     AnimationDuration="200">
+</TelerikNotification>

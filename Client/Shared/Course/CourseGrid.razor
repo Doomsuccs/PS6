@@ -1,0 +1,78 @@
+﻿@inherits TelerikGridCrud
+
+
+<TelerikGrid @ref="@_CourseGrid"
+             Data="@lstData"
+             SortMode="@SortMode.Multiple"
+             Width="100%"
+             EditMode="GridEditMode.Inline"
+             ScrollMode="@GridScrollMode.Scrollable"
+             Pageable="true"
+             Sortable="true"
+             Groupable="false"
+             @bind-PageSize="@PageSize"
+             FilterMode="@GridFilterMode.FilterMenu"
+             Resizable="true"
+             Reorderable="true"
+             OnAdd="@AddItem"
+             OnEdit="@EditItem"
+             OnUpdate="@UpdateItem"
+             OnCreate="@CreateItem"
+             OnDelete="@DeleteItem"
+             ShowColumnMenu="true">
+    <GridSettings>
+        <GridPagerSettings InputType="PagerInputType.Input" PageSizes="@PageSizes" />
+    </GridSettings>
+    <GridToolBarTemplate>
+        <GridCommandButton Command="Add" Icon="@FontIcon.Plus">Add Item</GridCommandButton>
+        <GridCommandButton Command="ExcelExport" Icon="@FontIcon.FileExcel">Export to Excel</GridCommandButton>
+        <label class="k-checkbox-label"><TelerikCheckBox @bind-Value="@ExportAllPages" /> Export All Pages</label>
+        <span class="k-toolbar-spacer"></span> @* add this spacer to keep the searchbox on the right *@
+        <GridSearchBox DebounceDelay="200"></GridSearchBox>
+    </GridToolBarTemplate>
+    <GridExport>
+        <GridExcelExport FileName="telerik-grid-export" AllPages="@ExportAllPages" />
+    </GridExport>
+    <GridColumns>
+        <GridColumn Field="@(nameof(CourseDTO.SchoolId ))" VisibleInColumnChooser="false" ShowColumnMenu="false" Locked="true" Editable="false" Visible="false" />
+
+
+        <GridColumn Field="@(nameof(CourseDTO.SchoolId))" Context="Config" Title="School">
+            <Template>
+                @{
+                    var _CourseDTO = Config as CourseDTO;
+                    <div>@_CourseDTO._School.SchoolName</div>
+                }
+            </Template>
+            <EditorTemplate>
+                @{
+                    var _CourseDTO = Config as CourseDTO;
+                    <TelerikDropDownList Data="@lstSchools"
+                                         @bind-Value="@_CourseDTO.SchoolId"
+                                     TextField="SchoolName"
+                                     ValueField="SchoolId"
+                                     Id="itmSchool">
+                        <DropDownListSettings>
+                            <DropDownListPopupSettings Height="auto" MaxHeight="200px;" />
+                        </DropDownListSettings>
+                    </TelerikDropDownList>
+                }
+                @{
+                    <ValidationMessage For="@(() => _CourseDTO.SchoolId)"></ValidationMessage>
+                }
+            </EditorTemplate>
+        </GridColumn>
+
+
+        <GridColumn Field="@(nameof(CourseDTO.CourseNo ))" Visible="true" Locked="true" />
+        <GridColumn Field="@(nameof(CourseDTO.Description ))" Title="Description" />
+        <GridColumn Field="@(nameof(CourseDTO.Cost ))" Title="Cost" />
+        <GridCommandColumn Width="10%">
+            <GridCommandButton Command="Save" Icon="@FontIcon.Save" ShowInEdit="true"></GridCommandButton>
+            <GridCommandButton Command="Edit" Icon="@FontIcon.Pencil"></GridCommandButton>
+            <GridCommandButton Command="Delete" Icon="@FontIcon.Trash"></GridCommandButton>
+            <GridCommandButton Command="Cancel" Icon="@FontIcon.Cancel" ShowInEdit="true"></GridCommandButton>
+        </GridCommandColumn>
+    </GridColumns>
+</TelerikGrid>
+

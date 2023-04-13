@@ -12,14 +12,14 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace DOOR.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230325151028_initial")]
+    [Migration("20230413022211_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("DOOR_USER")
+                .HasDefaultSchema("PS5")
                 .UseCollation("USING_NLS_COMP")
                 .HasAnnotation("ProductVersion", "6.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
@@ -103,7 +103,7 @@ namespace DOOR.Server.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("\"NORMALIZED_USER_NAME\" IS NOT NULL");
 
-                    b.ToTable("ASP_NET_USERS", "DOOR_USER");
+                    b.ToTable("ASP_NET_USERS", "PS5");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.DeviceFlowCodes", b =>
@@ -162,7 +162,7 @@ namespace DOOR.Server.Migrations
 
                     b.HasIndex("Expiration");
 
-                    b.ToTable("DEVICE_CODES", "DOOR_USER");
+                    b.ToTable("DEVICE_CODES", "PS5");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.Key", b =>
@@ -206,7 +206,7 @@ namespace DOOR.Server.Migrations
 
                     b.HasIndex("Use");
 
-                    b.ToTable("KEYS", "DOOR_USER");
+                    b.ToTable("KEYS", "PS5");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.PersistedGrant", b =>
@@ -271,7 +271,7 @@ namespace DOOR.Server.Migrations
 
                     b.HasIndex("SubjectId", "SessionId", "Type");
 
-                    b.ToTable("PERSISTED_GRANTS", "DOOR_USER");
+                    b.ToTable("PERSISTED_GRANTS", "PS5");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -302,7 +302,7 @@ namespace DOOR.Server.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("\"NORMALIZED_NAME\" IS NOT NULL");
 
-                    b.ToTable("ASP_NET_ROLES", "DOOR_USER");
+                    b.ToTable("ASP_NET_ROLES", "PS5");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -331,7 +331,7 @@ namespace DOOR.Server.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("ASP_NET_ROLE_CLAIMS", "DOOR_USER");
+                    b.ToTable("ASP_NET_ROLE_CLAIMS", "PS5");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -360,7 +360,7 @@ namespace DOOR.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ASP_NET_USER_CLAIMS", "DOOR_USER");
+                    b.ToTable("ASP_NET_USER_CLAIMS", "PS5");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -388,7 +388,7 @@ namespace DOOR.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ASP_NET_USER_LOGINS", "DOOR_USER");
+                    b.ToTable("ASP_NET_USER_LOGINS", "PS5");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -405,7 +405,7 @@ namespace DOOR.Server.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("ASP_NET_USER_ROLES", "DOOR_USER");
+                    b.ToTable("ASP_NET_USER_ROLES", "PS5");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -430,7 +430,7 @@ namespace DOOR.Server.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("ASP_NET_USER_TOKENS", "DOOR_USER");
+                    b.ToTable("ASP_NET_USER_TOKENS", "PS5");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

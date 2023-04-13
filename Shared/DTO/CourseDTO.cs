@@ -5,7 +5,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using DOOR.EF.Models;
 
+#nullable disable
 namespace DOOR.Shared.DTO
 {
     public class CourseDTO
@@ -22,5 +25,10 @@ namespace DOOR.Shared.DTO
 
         public string ModifiedBy { get; set; } = null!;
         public DateTime ModifiedDate { get; set; }
+        public int SchoolId { get; set; }
+        [Precision(8)]
+        public int? PrerequisiteSchoolId { get; set; }
+
+        public virtual School _School { get; set; } = null!;
     }
 }
