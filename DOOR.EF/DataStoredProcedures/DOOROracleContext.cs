@@ -19,7 +19,7 @@ namespace DOOR.EF.Data
             var user_id_in = new OracleParameter("p_User_ID", OracleDbType.Varchar2, UserID, ParameterDirection.Input);
             try
             {
-                this.Database.ExecuteSqlRaw("BEGIN pkg_set_context.set_user_id({0}); END;", user_id_in);
+                this.Database.ExecuteSqlRaw("BEGIN pkg_context.set_context({0}); END;", user_id_in);
             }
             catch (Exception ex)
             {
