@@ -19,7 +19,7 @@ namespace DOOR.Server.Data
         {
             base.OnModelCreating(builder);
 
-            builder.HasDefaultSchema("PS5")
+            builder.HasDefaultSchema("PS6")
                 .HasAnnotation("Relational:Collation", "USING_NLS_COMP");
 
             builder.ToUpperCaseTables();

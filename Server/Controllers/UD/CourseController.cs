@@ -28,6 +28,7 @@ using DOOR.Shared.DTO;
 using DOOR.Shared.Utils;
 using DOOR.Server.Controllers.Common;
 using System.Diagnostics;
+using System.Security.Principal;
 
 namespace DOOR.Server.Controllers.app
 {
@@ -36,8 +37,10 @@ namespace DOOR.Server.Controllers.app
     public class CourseController : BaseController
     {
         public CourseController(DOOROracleContext _DBcontext,
+            IHttpContextAccessor httpContextAccessor,
+       
             OraTransMsgs _OraTransMsgs)
-            : base(_DBcontext, _OraTransMsgs)
+            : base(_DBcontext, httpContextAccessor, _OraTransMsgs)
 
         {
         }
@@ -47,6 +50,8 @@ namespace DOOR.Server.Controllers.app
         [Route("GetCourse")]
         public async Task<IActionResult> GetCourse()
         {
+            await _context.Database.BeginTransactionAsync();
+            _context.SetUserID(_CurrUser.UserID);
             List<CourseDTO> lst = await _context.Courses
                 .Select(sp => new CourseDTO
                 {
@@ -62,6 +67,7 @@ namespace DOOR.Server.Controllers.app
                     PrerequisiteSchoolId = sp.PrerequisiteSchoolId,
                     _School = sp.School
                 }).ToListAsync();
+            await _context.Database.RollbackTransactionAsync();
             return Ok(lst);
         }
 

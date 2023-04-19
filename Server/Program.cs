@@ -5,6 +5,7 @@ using DOOR.Server.Data;
 using DOOR.Server.Models;
 using DOOR.EF.Data;
 using DOOR.Shared.Utils;
+using System.Security.Principal;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ builder.Services.AddDbContext<DOOROracleContext>(options =>
 
 var optionsBuilder = new DbContextOptionsBuilder<DOOROracleContext>();
 optionsBuilder.UseOracle(connectionString);
+
+builder.Services.AddSingleton<iCurrentUser, CurrentUser>();
 
 builder.Services.AddSingleton(new OraTransMsgs((optionsBuilder.Options)));
 

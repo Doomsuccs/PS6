@@ -41,8 +41,17 @@ namespace DOOR.EF.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDefaultSchema("PS5")
+            modelBuilder.HasDefaultSchema("PS6")
                 .UseCollation("USING_NLS_COMP");
+
+            modelBuilder.Entity<AspNetRoleClaim>(entity =>
+            {
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.AspNetRoleClaims)
+                    .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("ASP_NET_ROLE_CLAIMS_FK1");
+            });
 
             modelBuilder.Entity<AspNetUser>(entity =>
             {
@@ -50,11 +59,11 @@ namespace DOOR.EF.Data
                     .WithMany(p => p.Users)
                     .UsingEntity<Dictionary<string, object>>(
                         "AspNetUserRole",
-                        l => l.HasOne<AspNetRole>().WithMany().HasForeignKey("RoleId"),
-                        r => r.HasOne<AspNetUser>().WithMany().HasForeignKey("UserId"),
+                        l => l.HasOne<AspNetRole>().WithMany().HasForeignKey("RoleId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("ASP_NET_USER_ROLES_FK2"),
+                        r => r.HasOne<AspNetUser>().WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("ASP_NET_USER_ROLES_FK1"),
                         j =>
                         {
-                            j.HasKey("UserId", "RoleId");
+                            j.HasKey("UserId", "RoleId").HasName("ASP_NET_USER_ROLES_PK");
 
                             j.ToTable("ASP_NET_USER_ROLES");
 
@@ -66,14 +75,37 @@ namespace DOOR.EF.Data
                         });
             });
 
+            modelBuilder.Entity<AspNetUserClaim>(entity =>
+            {
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserClaims)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("ASP_NET_USER_CLAIMS_FK1");
+            });
+
             modelBuilder.Entity<AspNetUserLogin>(entity =>
             {
-                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
+                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey })
+                    .HasName("ASP_NET_USER_LOGINS_PK");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserLogins)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("ASP_NET_USER_LOGINS_FK1");
             });
 
             modelBuilder.Entity<AspNetUserToken>(entity =>
             {
-                entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+                entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name })
+                    .HasName("ASP_NET_USER_TOKENS_PK");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserTokens)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("ASP_NET_USER_TOKENS_FK1");
             });
 
             modelBuilder.Entity<Course>(entity =>
@@ -101,6 +133,12 @@ namespace DOOR.EF.Data
                     .WithMany(p => p.InversePrerequisiteNavigation)
                     .HasForeignKey(d => new { d.Prerequisite, d.PrerequisiteSchoolId })
                     .HasConstraintName("COURSE_FK1");
+            });
+
+            modelBuilder.Entity<DeviceCode>(entity =>
+            {
+                entity.HasKey(e => e.UserCode)
+                    .HasName("DEVICE_CODES_PK");
             });
 
             modelBuilder.Entity<Enrollment>(entity =>
@@ -276,6 +314,12 @@ namespace DOOR.EF.Data
                 entity.Property(e => e.OraTranslateMsgId)
                     .ValueGeneratedOnAdd()
                     .HasDefaultValueSql("sys_guid()");
+            });
+
+            modelBuilder.Entity<PersistedGrant>(entity =>
+            {
+                entity.HasKey(e => e.Key)
+                    .HasName("PERSISTED_GRANTS_PK");
             });
 
             modelBuilder.Entity<School>(entity =>

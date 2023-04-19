@@ -28,6 +28,7 @@ using DOOR.Shared.DTO;
 using DOOR.Shared.Utils;
 using DOOR.Server.Controllers.Common;
 using System.Diagnostics;
+using System.Security.Principal;
 
 namespace DOOR.Server.Controllers.UD
 {
@@ -36,8 +37,10 @@ namespace DOOR.Server.Controllers.UD
     public class SchoolController : BaseController
     {
         public SchoolController(DOOROracleContext _DBcontext,
+              IHttpContextAccessor httpContextAccessor,
+
     OraTransMsgs _OraTransMsgs)
-    : base(_DBcontext, _OraTransMsgs)
+     : base(_DBcontext, httpContextAccessor, _OraTransMsgs)
 
         {
         }
@@ -46,6 +49,8 @@ namespace DOOR.Server.Controllers.UD
         [Route("GetSchool")]
         public async Task<IActionResult> GetSchool()
         {
+            await _context.Database.BeginTransactionAsync();
+            _context.SetUserID(_CurrUser.UserID);
             List<SchoolDTO> lst = await _context.Schools
                 .Select(sp => new SchoolDTO
                 {
@@ -56,7 +61,10 @@ namespace DOOR.Server.Controllers.UD
                     SchoolId = sp.SchoolId,
                     SchoolName = sp.SchoolName
                 }).ToListAsync();
+            await _context.Database.RollbackTransactionAsync();
             return Ok(lst);
+            
+
         }
     }
 }

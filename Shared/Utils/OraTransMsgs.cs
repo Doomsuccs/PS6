@@ -26,7 +26,7 @@ namespace DOOR.Shared.Utils
             using (var db = new DOOROracleContext(_dbContextOptions))
             {
 
-                lstOraTranslateMsgs = db.OraTranslateMsgs.ToList();
+               // lstOraTranslateMsgs = db.OraTranslateMsgs.ToList();
             }
         }
 
