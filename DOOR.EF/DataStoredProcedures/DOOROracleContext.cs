@@ -16,10 +16,11 @@ namespace DOOR.EF.Data
         public void SetUserID(string UserID)
         {
             this.LoggedInUserId = UserID;
+            var school_id_in = new OracleParameter("p_school_id_in", OracleDbType.Int32, 1, ParameterDirection.Input);
             var user_id_in = new OracleParameter("p_User_ID", OracleDbType.Varchar2, UserID, ParameterDirection.Input);
             try
             {
-                this.Database.ExecuteSqlRaw("BEGIN pkg_context.set_context({0}); END;", user_id_in);
+                this.Database.ExecuteSqlRaw("BEGIN pkg_context.set_context({0}, {1}); END;", school_id_in, user_id_in);
             }
             catch (Exception ex)
             {
