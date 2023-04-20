@@ -75,6 +75,9 @@ namespace DOOR.Server.Controllers.app
         [Route("GetCourse/{_SchoolID}/{_CourseNo}")]
         public async Task<IActionResult> GetCourse(int _SchoolID, int _CourseNo)
         {
+            await _context.Database.BeginTransactionAsync();
+            _context.SetUserID(_CurrUser.UserID);
+
             CourseDTO? lst = await _context.Courses
                 .Where(x => x.CourseNo == _CourseNo)
                 .Where(x => x.SchoolId == _SchoolID)
@@ -92,6 +95,7 @@ namespace DOOR.Server.Controllers.app
                     PrerequisiteSchoolId = sp.PrerequisiteSchoolId,
                     _School = sp.School
                 }).FirstOrDefaultAsync();
+            await _context.Database.RollbackTransactionAsync();
             return Ok(lst);
         }
 
@@ -102,6 +106,9 @@ namespace DOOR.Server.Controllers.app
         {
             try
             {
+                await _context.Database.BeginTransactionAsync();
+                _context.SetUserID(_CurrUser.UserID);
+
                 Course? c = await _context.Courses
                 .Where(x => x.CourseNo == _CourseDTO.CourseNo)
                 .Where(x => x.SchoolId == _CourseDTO.SchoolId)
@@ -119,17 +126,19 @@ namespace DOOR.Server.Controllers.app
                     };
                     _context.Courses.Add(c);
                     await _context.SaveChangesAsync();
+                    await _context.Database.CommitTransactionAsync();
                 }
             }
 
             catch (DbUpdateException Dex)
             {
+                await _context.Database.RollbackTransactionAsync();
                 List<OraError> DBErrors = ErrorHandling.TryDecodeDbUpdateException(Dex, _OraTranslateMsgs);
                 return StatusCode(StatusCodes.Status417ExpectationFailed, Newtonsoft.Json.JsonConvert.SerializeObject(DBErrors));
             }
             catch (Exception ex)
             {
-                _context.Database.RollbackTransaction();
+                await _context.Database.RollbackTransactionAsync();
                 List<OraError> errors = new List<OraError>();
                 errors.Add(new OraError(1, ex.Message.ToString()));
                 string ex_ser = Newtonsoft.Json.JsonConvert.SerializeObject(errors);
@@ -198,6 +207,9 @@ namespace DOOR.Server.Controllers.app
         {
             try
             {
+                await _context.Database.BeginTransactionAsync();
+                _context.SetUserID(_CurrUser.UserID);
+
                 Course? c = await _context.Courses.Where(x => x.CourseNo == _CourseNo).Where(x => x.SchoolId == _SchoolId).FirstOrDefaultAsync();
 
                 if (c != null)
@@ -209,11 +221,13 @@ namespace DOOR.Server.Controllers.app
 
             catch (DbUpdateException Dex)
             {
+                await _context.Database.RollbackTransactionAsync();
                 List<OraError> DBErrors = ErrorHandling.TryDecodeDbUpdateException(Dex, _OraTranslateMsgs);
                 return StatusCode(StatusCodes.Status417ExpectationFailed, Newtonsoft.Json.JsonConvert.SerializeObject(DBErrors));
             }
             catch (Exception ex)
             {
+                await _context.Database.RollbackTransactionAsync();
                 _context.Database.RollbackTransaction();
                 List<OraError> errors = new List<OraError>();
                 errors.Add(new OraError(1, ex.Message.ToString()));
