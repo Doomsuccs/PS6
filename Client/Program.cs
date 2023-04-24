@@ -19,5 +19,7 @@ builder.Services.AddApiAuthorization();
 builder.Services.AddScoped<CourseService>();
 
 builder.Services.AddScoped<SchoolService>();
+builder.Services.AddScoped<GradeService>();
+
 
 await builder.Build().RunAsync();

@@ -50,22 +50,43 @@ OraTransMsgs _OraTransMsgs)
         [Route("GetGrade")]
         public async Task<IActionResult> GetGrade()
         {
-            List<GradeDTO> lst = await _context.Grades
-                .Select(sp => new GradeDTO
-                {
-                    SchoolId = sp.SchoolId,
-                    StudentId = sp.StudentId,
-                    SectionId = sp.SectionId,
-                    GradeTypeCode = sp.GradeTypeCode,
-                    GradeCodeOccurrence = sp.GradeCodeOccurrence,
-                    NumericGrade = sp.NumericGrade,
-                    Comments = sp.Comments,
-                    CreatedBy = sp.CreatedBy,
-                    CreatedDate = sp.CreatedDate,
-                    ModifiedBy = sp.ModifiedBy,
-                    ModifiedDate = sp.ModifiedDate
-                }).ToListAsync();
-            return Ok(lst);
+            try
+            {
+                await _context.Database.BeginTransactionAsync();
+                _context.SetUserID(1, _CurrUser.UserID);
+                List<GradeDTO> lst = await _context.Grades
+                    .Select(sp => new GradeDTO
+                    {
+                        SchoolId = sp.SchoolId,
+                        StudentId = sp.StudentId,
+                        SectionId = sp.SectionId,
+                        GradeTypeCode = sp.GradeTypeCode,
+                        GradeCodeOccurrence = sp.GradeCodeOccurrence,
+                        NumericGrade = sp.NumericGrade,
+                        Comments = sp.Comments,
+                        CreatedBy = sp.CreatedBy,
+                        CreatedDate = sp.CreatedDate,
+                        ModifiedBy = sp.ModifiedBy,
+                        ModifiedDate = sp.ModifiedDate
+                    }).ToListAsync();
+                await _context.Database.RollbackTransactionAsync();
+                return Ok(lst);
+            }
+            catch (DbUpdateException Dex)
+            {
+                await _context.Database.RollbackTransactionAsync();
+                List<OraError> DBErrors = ErrorHandling.TryDecodeDbUpdateException(Dex, _OraTranslateMsgs);
+                return StatusCode(StatusCodes.Status417ExpectationFailed, Newtonsoft.Json.JsonConvert.SerializeObject(DBErrors));
+            }
+            catch (Exception ex)
+            {
+                await _context.Database.RollbackTransactionAsync();
+                List<OraError> errors = new List<OraError>();
+                errors.Add(new OraError(1, ex.Message.ToString()));
+                string ex_ser = Newtonsoft.Json.JsonConvert.SerializeObject(errors);
+                return StatusCode(StatusCodes.Status417ExpectationFailed, ex_ser);
+            }
+
         }
 
 

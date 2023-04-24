@@ -50,7 +50,7 @@ namespace DOOR.Server.Controllers.UD
         public async Task<IActionResult> GetSchool()
         {
             await _context.Database.BeginTransactionAsync();
-            _context.SetUserID(_CurrUser.UserID);
+            _context.SetUserID(1, _CurrUser.UserID);
             List<SchoolDTO> lst = await _context.Schools
                 .Select(sp => new SchoolDTO
                 {

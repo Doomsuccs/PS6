@@ -1,0 +1,11 @@
+﻿@page "/Student/Grades"
+@attribute [Authorize]
+@inherits TelerikGridCrud
+
+
+<StudentGradesGrid @ref="_StudentGradesGrid" _StudentGrades="this"></StudentGradesGrid>
+
+<TelerikNotification @ref="@Notification"
+                     AnimationType="AnimationType.Fade"
+                     AnimationDuration="200">
+</TelerikNotification>

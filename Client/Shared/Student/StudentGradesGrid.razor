@@ -1,0 +1,39 @@
+﻿@inherits TelerikGridCrud
+
+
+<TelerikGrid @ref="@_GradeGrid"
+             Data="@lstData"
+             SortMode="@SortMode.Multiple"
+             Width="100%"
+             EditMode="GridEditMode.None"
+             ScrollMode="@GridScrollMode.Scrollable"
+             Pageable="true"
+             Sortable="true"
+             Groupable="true"
+             @bind-PageSize="@PageSize"
+             FilterMode="@GridFilterMode.FilterMenu"
+             Resizable="true"
+             Reorderable="true"
+             ShowColumnMenu="true">
+    <GridSettings>
+        <GridPagerSettings InputType="PagerInputType.Input" PageSizes="@PageSizes" />
+    </GridSettings>
+    <GridToolBarTemplate>
+        <GridCommandButton Command="ExcelExport" Icon="@FontIcon.FileExcel">Export to Excel</GridCommandButton>
+        <label class="k-checkbox-label"><TelerikCheckBox @bind-Value="@ExportAllPages" /> Export All Pages</label>
+        <span class="k-toolbar-spacer"></span> @* add this spacer to keep the searchbox on the right *@
+        <GridSearchBox DebounceDelay="200"></GridSearchBox>
+    </GridToolBarTemplate>
+    <GridExport>
+        <GridExcelExport FileName="telerik-grid-export" AllPages="@ExportAllPages" />
+    </GridExport>
+    <GridColumns>
+        <GridColumn Field="@(nameof(GradeDTO.SchoolId ))" VisibleInColumnChooser="false" ShowColumnMenu="false" Locked="true" Editable="false" Visible="false" />
+
+        <GridColumn Field="@(nameof(GradeDTO.StudentId ))" Visible="true" Locked="true" />
+        <GridColumn Field="@(nameof(GradeDTO.GradeTypeCode ))" Visible="true" Locked="true" />
+        <GridColumn Field="@(nameof(GradeDTO.GradeCodeOccurrence ))"  />
+        <GridColumn Field="@(nameof(GradeDTO.NumericGrade ))" />
+    </GridColumns>
+</TelerikGrid>
+

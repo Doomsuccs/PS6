@@ -50,7 +50,7 @@ namespace DOOR.Server.Controllers.app
         public async Task<IActionResult> GetCourse()
         {
             await _context.Database.BeginTransactionAsync();
-            _context.SetUserID(_CurrUser.UserID);
+            _context.SetUserID(1, _CurrUser.UserID);
             List<CourseDTO> lst = await _context.Courses
                 .Select(sp => new CourseDTO
                 {
@@ -76,7 +76,7 @@ namespace DOOR.Server.Controllers.app
         public async Task<IActionResult> GetCourse(int _SchoolID, int _CourseNo)
         {
             await _context.Database.BeginTransactionAsync();
-            _context.SetUserID(_CurrUser.UserID);
+            _context.SetUserID(1, _CurrUser.UserID);
 
             CourseDTO? lst = await _context.Courses
                 .Where(x => x.CourseNo == _CourseNo)
@@ -107,7 +107,7 @@ namespace DOOR.Server.Controllers.app
             try
             {
                 await _context.Database.BeginTransactionAsync();
-                _context.SetUserID(_CurrUser.UserID);
+                _context.SetUserID(1, _CurrUser.UserID);
 
                 Course? c = await _context.Courses
                 .Where(x => x.CourseNo == _CourseDTO.CourseNo)
@@ -163,7 +163,7 @@ namespace DOOR.Server.Controllers.app
             try
             {
                 await _context.Database.BeginTransactionAsync();
-                _context.SetUserID(_CurrUser.UserID);
+                _context.SetUserID(1, _CurrUser.UserID);
                 Course? c = await _context.Courses
                 .Where(x => x.CourseNo == _CourseDTO.CourseNo)
                 .Where(x => x.SchoolId == _CourseDTO.SchoolId)
@@ -208,7 +208,7 @@ namespace DOOR.Server.Controllers.app
             try
             {
                 await _context.Database.BeginTransactionAsync();
-                _context.SetUserID(_CurrUser.UserID);
+                _context.SetUserID(1, _CurrUser.UserID);
 
                 Course? c = await _context.Courses.Where(x => x.CourseNo == _CourseNo).Where(x => x.SchoolId == _SchoolId).FirstOrDefaultAsync();
 
