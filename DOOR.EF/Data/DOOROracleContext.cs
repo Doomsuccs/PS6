@@ -35,13 +35,14 @@ namespace DOOR.EF.Data
         public virtual DbSet<OraTranslateMsg> OraTranslateMsgs { get; set; } = null!;
         public virtual DbSet<PersistedGrant> PersistedGrants { get; set; } = null!;
         public virtual DbSet<School> Schools { get; set; } = null!;
+        public virtual DbSet<SchoolUser> SchoolUsers { get; set; } = null!;
         public virtual DbSet<Section> Sections { get; set; } = null!;
         public virtual DbSet<Student> Students { get; set; } = null!;
         public virtual DbSet<Zipcode> Zipcodes { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDefaultSchema("PS6")
+            modelBuilder.HasDefaultSchema("UD_DOOMSUCC")
                 .UseCollation("USING_NLS_COMP");
 
             modelBuilder.Entity<AspNetRoleClaim>(entity =>
@@ -333,6 +334,41 @@ namespace DOOR.EF.Data
                 entity.Property(e => e.ModifiedBy).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.ModifiedDate).ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<SchoolUser>(entity =>
+            {
+                entity.Property(e => e.CreatedBy).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.CreatedDate).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.ModifiedBy).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.ModifiedDate).ValueGeneratedOnAdd();
+
+                entity.HasOne(d => d.School)
+                    .WithMany()
+                    .HasForeignKey(d => d.SchoolId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("SCHOOL_ID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany()
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("USER_ID");
+
+                entity.HasOne(d => d.Instructor)
+                    .WithMany()
+                    .HasForeignKey(d => new { d.SchoolId, d.InstructorId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("SCHOOL_ID_INSTRUCTOR_ID");
+
+                entity.HasOne(d => d.S)
+                    .WithMany()
+                    .HasForeignKey(d => new { d.StudentId, d.SchoolId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("SCHOOL_ID_STUDENT_ID");
             });
 
             modelBuilder.Entity<Section>(entity =>
